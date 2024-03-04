@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Random Name Picker</title>
+<style>
+ body {
+  font-family: 'Arial', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f7f7f7;
+  margin: 0;
+  flex-direction: column;
+ }
+
+ #announcement-container {
+  text-align: center;
+  margin-bottom: 20px;
+ }
+
+.winner-name, #winner-announcement {
+  font-size: 2em;
+  color: #d04a02;
+  text-align: center;
+  animation: flash 2s infinite alternate;
+}
+
+@keyframes flash {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+ #names-container {
+  margin-top: 20px;
+  text-align: center;
+  overflow: hidden;
+ }
+
+ #names-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  animation: roll 10s linear forwards;
+ }
+
+ @keyframes roll {
+  0% { transform: translateY(100%); }
+  100% { transform: translateY(-100%); }
+ }
+
+#names-list li {
+  width: 100%;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  animation: fadeInOut 3s linear alternate;
+}
+
+@keyframes fadeInOut {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+ #button-container {
+  margin-top: 20px;
+ }
+
+ #pick-button {
+  padding: 10px 20px;
+  font-size: 1.5em;
+  background-color: #4CAF50;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+ }
+
+ #pick-button:hover {
+  background-color: #45a049;
+ }
+</style>
+</head>
+<body>
+
+<div id="announcement-container">
+ <div id="winner-announcement">الفائزون في السحب</div>
+</div>
+
+<div id="names-container">
+ <ul id="names-list">
+  <!-- Names will be added here by JavaScript -->
+ </ul>
+</div>
+
+<div id="button-container">
+ <button id="pick-button">اختر الفائزين</button>
+</div>
+
+<script>
+ const names = [
+"F/لمى أميرة العتيبي",
+"F/سارة ندى السهلي",
+"F/هيا ندى الشهري",
+"F/ريم ندى الحربي",
+"F/عبير ندى الدوسري",
+"M/طارق راشد القحطاني",
+"M/عبدالله سعود القحطاني",
+"F/نورة هدى الشهري",
+"M/بدر سعود العلي",
+"F/نورة هدى القحطاني",
+"M/عزام فيصل المطيري",
+"F/هيا منيرة الزهراني",
+"M/فهد هاني الزهراني",
+"M/مشعل معيقل القحطاني",
+"M/بدر سعود الحربي",
+"F/عبير هدى العتيبي",
+"M/عبدالله ياسر السهلي",
+"M/طارق ياسر السهلي",
+"M/خالد جميل المالكي",
+"F/ريم ريما الشهري",
+"M/خالد ماجد المالكي",
+"F/هيا منيرة المطيري",
+"F/جواهر أميرة الشهري",
+"F/فاطمة بدرية الزهراني",
+"F/سارة لطيفة القحطاني",
+"M/عبدالله فيصل العتيبي",
+"F/لمى تهاني الشهري",
+"M/مشعل راشد المالكي",
+"M/خالد غانم السهلي",
+"F/هيا أميرة الحربي",
+"F/لمى بدرية العلي",
+"M/عبدالله ماجد المطيري",
+"F/جواهر لطيفة المالكي",
+"M/عبدالله معيقل السهلي",
+"M/مشعل هاني الشهري",
+"M/خالد طلال المطيري",
+"F/نورة نجلاء المالكي",
+"M/عزام طلال الشهري",
+"M/خالد هاني السهلي",
+"M/رواف معيقل العتيبي",
+"M/طارق فيصل الزهراني",
+"M/فهد راشد الدوسري",
+"F/مها نجلاء العلي",
+"F/فاطمة سميرة الشهري",
+"F/مها بدرية المالكي",
+"F/مها هدى الشهري",
+"F/نورة بدرية السهلي",
+"F/جواهر تهاني المطيري",
+"M/مشعل ماجد القحطاني",
+"M/خالد طلال العتيبي",
+"F/جواهر هدى الزهراني",
+"F/جواهر ندى الحربي",
+"M/طارق ماجد الشهري",
+"F/هيا لطيفة الزهراني",
+"F/لمى ندى العتيبي",
+"M/فهد طلال الزهراني",
+"F/نورة أميرة السهلي",
+"M/بدر فيصل المطيري",
+"F/نورة لطيفة السهلي",
+"F/فاطمة أميرة الحربي",
+"M/رواف سعود العتيبي",
+"M/عزام هاني العلي",
+"M/عبدالله ياسر الزهراني",
+"F/سارة أميرة العتيبي",
+"F/مها نجلاء الدوسري",
+"F/أمل نجلاء المطيري",
+"M/رواف سعود الزهراني",
+"F/جواهر هدى الشهري",
+"M/نايف ياسر العتيبي",
+"M/رواف طلال العلي",
+"F/ريم أميرة العلي",
+"M/خالد جميل السهلي",
+"F/جواهر أميرة الحربي",
+"F/أمل منيرة المالكي",
+"M/رواف هاني المطيري",
+"F/فاطمة لطيفة المطيري",
+"M/خالد ماجد المالكي",
+"F/مها سميرة الزهراني",
+"M/خالد سعود العتيبي",
+"F/نورة تهاني العلي",
+"M/سلطان هاني الدوسري",
+"F/ريم هدى الحربي",
+"M/طارق غانم السهلي",
+"M/بدر ماجد العتيبي",
+"M/رواف فيصل العلي",
+"M/طارق غانم الدوسري",
+"M/نايف ياسر الزهراني",
+"M/مشعل ماجد الشهري",
+"F/ريم أميرة الشهري",
+"M/بدر ياسر الشهري",
+"M/نايف معيقل المطيري",
+"F/هيا منيرة السهلي",
+"F/فاطمة بدرية الشهري",
+"M/سلطان غانم المالكي",
+"F/ريم لطيفة القحطاني",
+"F/نورة ندى المالكي",
+"F/فاطمة بدرية الحربي",
+"F/عبير لطيفة الحربي",
+"M/بدر جميل العتيبي",
+"M/فهد طلال الزهراني",
+
+  ];
+
+ const namesListElement = document.getElementById('names-list');
+ const winnerAnnouncement = document.getElementById('winner-announcement');
+ const pickButton = document.getElementById('pick-button');
+
+ function animateNames() {
+  namesListElement.innerHTML = '';
+  names.forEach((name, index) => {
+   const li = document.createElement('li');
+   li.textContent = name.substring(2); // Remove gender prefix for display
+   namesListElement.appendChild(li);
+  });
+ }
+
+ function separateNamesByGender(names) {
+  const males = names.filter(name => name.startsWith('M/'));
+  const females = names.filter(name => name.startsWith('F/'));
+  return { males, females };
+ }
+
+ function pickWinners() {
+  const { males, females } = separateNamesByGender(names);
+  const maleWinnerIndex = Math.floor(Math.random() * males.length);
+  const femaleWinnerIndex = Math.floor(Math.random() * females.length);
+  const maleWinnerName = males[maleWinnerIndex].substring(2); // Remove "M/" prefix
+  const femaleWinnerName = females[femaleWinnerIndex].substring(2); // Remove "F/" prefix
+
+  // Clear previous content
+  winnerAnnouncement.innerHTML = '';
+
+  // Create male winner element
+  const maleWinnerElement = document.createElement('div');
+  maleWinnerElement.textContent = `الفائز الاول: ${maleWinnerName}`;
+  maleWinnerElement.className = 'winner-name';
+  winnerAnnouncement.appendChild(maleWinnerElement);
+
+  // Create female winner element
+  const femaleWinnerElement = document.createElement('div');
+  femaleWinnerElement.textContent = `الفائز الثاني: ${femaleWinnerName}`;
+  femaleWinnerElement.className = 'winner-name';
+  winnerAnnouncement.appendChild(femaleWinnerElement);
+
+  namesListElement.style.animation = 'none'; // Stop the scrolling animation
+  namesListElement.innerHTML = ''; // Clear the names list
+ }
+
+ pickButton.addEventListener('click', () => {
+  animateNames();
+  setTimeout(pickWinners, 10000); // Set timeout to 10 seconds
+ });
+</script>
+
+</body>
+</html>
